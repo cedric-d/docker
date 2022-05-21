@@ -1,0 +1,27 @@
+version: "2.4"
+services:
+  ffmpeg-rhel8:
+    build:
+      context: .
+      args:
+        FFMPEG_VERSION: "5.0.1"
+        GMMLIB_VERSION: "22.1.3"
+        INTELMEDIASDK_VERSION: "22.3.0"
+        LIBVA_VERSION: "2.14.0"
+        NVCODEC_VERSION: "11.1.5.1"
+        CUDA_RPM_VERSION: "11-7"
+        PREFIX: "/opt/ffmpeg"
+
+    image: ffmpeg-rhel8
+    volumes:
+      - output:/output
+    networks:
+      - bridge
+
+volumes:
+  output:
+    name: build-output
+
+networks:
+  bridge:
+    external: true

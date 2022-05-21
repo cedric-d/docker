@@ -1,0 +1,20 @@
+version: "2.4"
+services:
+  build-avidemux:
+    build: .
+    image: build-avidemux
+    volumes:
+      - output:/output
+    environment:
+      - AVIDEMUX_VERSION=2.8.0
+      - FFNVCODEC_VERSION=11.0.10.1
+    networks:
+      - bridge
+
+volumes:
+  output:
+    name: build-output
+
+networks:
+  bridge:
+    external: true
