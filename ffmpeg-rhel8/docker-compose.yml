@@ -15,13 +15,8 @@ services:
     image: ffmpeg-rhel8
     volumes:
       - output:/output
-    networks:
-      - bridge
+    network_mode: bridge
 
 volumes:
   output:
     name: build-output
-
-networks:
-  bridge:
-    external: true
