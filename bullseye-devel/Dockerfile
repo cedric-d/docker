@@ -33,6 +33,9 @@ RUN { \
       yasm
 
 
+COPY certs/*.crt /usr/local/share/ca-certificates/
+RUN update-ca-certificates
+
 RUN useradd -d /build -m -r -s /bin/bash -U builder \
  && mkdir -p /output /src \
  && echo 'builder ALL = NOPASSWD: ALL' > /etc/sudoers.d/superbuilder
