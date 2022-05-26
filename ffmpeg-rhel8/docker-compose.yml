@@ -4,19 +4,59 @@ services:
     build:
       context: .
       args:
-        FFMPEG_VERSION: "5.0.1"
-        GMMLIB_VERSION: "22.1.3"
-        INTELMEDIASDK_VERSION: "22.3.0"
-        LIBVA_VERSION: "2.14.0"
-        NVCODEC_VERSION: "11.1.5.1"
-        CUDA_RPM_VERSION: "11-7"
         PREFIX: "/opt/ffmpeg"
 
-    image: ffmpeg-rhel8
-    volumes:
-      - output:/output
-    network_mode: bridge
+        NVIDIA_DRIVER_VERSION: "460.91.03"
 
-volumes:
-  output:
-    name: build-output
+        # Minimum driver version required by Video Codec SDK:
+        # - 11.1.5.1: 470.57.02
+        # - 11.0.10.1: 455.28
+        # - 10.0.26.3: 445.87
+        # - 9.1.23.3: 435.21
+        # - 9.0.18.5: 418.30
+        NVCODEC_VERSION: "11.0.10.1"
+
+        # Minimum driver version requires by CUDA:
+        # - 11.[1-7]: 450.80.02
+        # - 11.0: 450.51.06
+        # - 10.2: 440.33
+        # - 10.1: 418.39
+        CUDA_RPM_VERSION: "11-7"
+
+    image: ffmpeg-rhel8
+
+    # permit access to MIT-SHM
+    ipc: host
+    userns_mode: host
+
+    # permit access to the network
+    network_mode: host
+
+    # permit access to the NVIDIA card
+    devices:
+      - /dev/nvidia0:/dev/nvidia0
+      - /dev/nvidiactl:/dev/nvidiactl
+      - /dev/nvidia-uvm:/dev/nvidia-uvm
+
+    # permit access to the X11 UNIX socket
+    volumes:
+      - /tmp/.X11-unix/:/tmp/.X11-unix/
+
+    command: [
+      "ffmpeg", "-hide_banner",
+
+      # input
+      "-f", "x11grab",
+      "-framerate", "25",
+      "-i", ":0",
+
+      # encode
+      "-c:v", "h264_nvenc",
+      "-preset", "p7",
+      "-tune", "hq",
+      "-rc-lookahead", "20",
+
+      # output
+      "-f", "rtp_mpegts",
+      "rtp://225.0.0.201:31201"
+    ]
