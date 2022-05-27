@@ -127,6 +127,7 @@ RUN tar xvf nv-codec-headers-${NVCODEC_VERSION}.tar.gz \
  && cd .. \
  && rm -rf nv-codec-headers-${NVCODEC_VERSION}
 
+ARG FFMPEG_EXTRA_CONFIGURE_OPTIONS
 RUN tar xvf ffmpeg-${FFMPEG_VERSION}.tar.xz \
  && cd ffmpeg-${FFMPEG_VERSION} \
  && ./configure --prefix=$PREFIX --libdir=$PREFIX/lib64 \
@@ -145,6 +146,7 @@ RUN tar xvf ffmpeg-${FFMPEG_VERSION}.tar.xz \
       --enable-vaapi \
     --disable-static --enable-shared --enable-rpath --enable-lto --disable-doc \
     --enable-nonfree \
+    ${FFMPEG_EXTRA_CONFIGURE_OPTIONS} \
  && make -j$(nproc) \
  && make install \
  && cd .. \
