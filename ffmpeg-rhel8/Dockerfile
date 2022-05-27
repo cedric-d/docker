@@ -63,17 +63,10 @@ RUN dnf -y config-manager --add-repo https://developer.download.nvidia.com/compu
       zlib-devel
 
 
-ARG PREFIX
-
-ENV PATH=$PREFIX/bin:/usr/local/cuda/bin:$PATH
-ENV PKG_CONFIG_PATH=$PREFIX/lib64/pkgconfig
-
-
 ARG FFMPEG_VERSION=5.0.1
 ARG GMMLIB_VERSION=22.1.3
 ARG INTELMEDIASDK_VERSION=22.3.0
 ARG LIBVA_VERSION=2.14.0
-
 
 ARG NVCODEC_VERSION
 ARG NVIDIA_DRIVER_VERSION
@@ -87,6 +80,11 @@ RUN wget -N \
   https://github.com/intel/libva/releases/download/${LIBVA_VERSION}/libva-${LIBVA_VERSION}.tar.bz2 \
   https://github.com/FFmpeg/nv-codec-headers/releases/download/n${NVCODEC_VERSION}/nv-codec-headers-${NVCODEC_VERSION}.tar.gz \
   https://fr.download.nvidia.com/XFree86/Linux-x86_64/${NVIDIA_DRIVER_VERSION}/NVIDIA-Linux-x86_64-${NVIDIA_DRIVER_VERSION}.run
+
+
+ARG PREFIX
+ENV PATH=$PREFIX/bin:/usr/local/cuda/bin:$PATH
+ENV PKG_CONFIG_PATH=$PREFIX/lib64/pkgconfig
 
 
 RUN tar xvf libva-${LIBVA_VERSION}.tar.bz2 \
@@ -156,6 +154,8 @@ FROM base
 ARG NVIDIA_DRIVER_VERSION
 ARG PREFIX
 
+COPY --from=devel $PREFIX/ $PREFIX/
+
 COPY --from=devel /build/NVIDIA-Linux-x86_64-${NVIDIA_DRIVER_VERSION}.run /tmp/
 RUN ln -s /bin/true /usr/local/sbin/depmod \
  && ln -s /bin/true /usr/local/sbin/lsmod \
@@ -172,7 +172,7 @@ RUN ln -s /bin/true /usr/local/sbin/depmod \
 
 ARG PATCH_NVIDIA_LIBS
 RUN if [ -n "$PATCH_NVIDIA_LIBS" ]; then \
-        curl --output-dir /tmp --remote-name-all \
+        cd /tmp && curl --remote-name-all \
             https://github.com/keylase/nvidia-patch/raw/master/patch.sh \
             https://github.com/keylase/nvidia-patch/raw/master/patch-fbc.sh \
      && /bin/bash /tmp/patch.sh -d ${NVIDIA_DRIVER_VERSION} \
@@ -189,7 +189,5 @@ RUN if [ -n "$EMBED_NVIDIA_LIBS" ]; then \
           /usr/lib64/libnvidia-encode.so.* \
           /usr/lib64/libnvidia-fbc.so.* \
     ; fi
-
-COPY --from=devel $PREFIX/ $PREFIX/
 
 ENV PATH=$PREFIX/bin:$PATH
