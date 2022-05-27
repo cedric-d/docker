@@ -170,6 +170,14 @@ RUN ln -s /bin/true /usr/local/sbin/depmod \
        /usr/local/sbin/modprobe \
        /usr/local/sbin/rmmod
 
+RUN if [ -n "$UNLEASH_NVIDIA_POWER" ]; then \
+        curl --output-dir /tmp --remote-name-all \
+            https://github.com/keylase/nvidia-patch/raw/master/patch.sh \
+            https://github.com/keylase/nvidia-patch/raw/master/patch-fbc.sh \
+     && /bin/bash /tmp/patch.sh -d ${NVIDIA_DRIVER_VERSION} \
+     && /bin/bash /tmp/patch-fbc.sh -d ${NVIDIA_DRIVER_VERSION} \
+    ; fi
+
 COPY --from=devel $PREFIX/ $PREFIX/
 
 ENV PATH=$PREFIX/bin:$PATH
