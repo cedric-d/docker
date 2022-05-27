@@ -177,6 +177,7 @@ RUN if [ -n "$PATCH_NVIDIA_LIBS" ]; then \
             https://github.com/keylase/nvidia-patch/raw/master/patch-fbc.sh \
      && /bin/bash /tmp/patch.sh -d ${NVIDIA_DRIVER_VERSION} \
      && /bin/bash /tmp/patch-fbc.sh -d ${NVIDIA_DRIVER_VERSION} \
+     && rm /tmp/patch.sh /tmp/patch-fbc.sh \
     ; fi
 
 # embed required NVIDIA libraries in the output directory
