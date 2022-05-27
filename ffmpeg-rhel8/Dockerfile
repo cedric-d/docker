@@ -25,7 +25,6 @@ RUN dnf -y install \
       libXfixes \
       libXrandr \
       libxcb \
-      SDL2 \
       xorg-x11-utils \
       xz \
       zlib
@@ -60,7 +59,6 @@ RUN dnf -y config-manager --add-repo https://developer.download.nvidia.com/compu
       libXfixes-devel \
       libXrandr-devel \
       libxcb-devel \
-      SDL2-devel \
       xz-devel \
       zlib-devel
 
