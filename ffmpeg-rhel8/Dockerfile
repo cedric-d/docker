@@ -5,8 +5,12 @@ FROM ${BASE_IMAGE} AS base
 
 COPY certs/ /etc/pki/ca-trust/source/anchors/
 
+# build variable to easily configure proxy authentication method (e.g. ntlm)
+ARG proxy_auth_method
+
 RUN update-ca-trust \
  && echo "install_weak_deps=False" >> /etc/dnf/dnf.conf \
+ && { [ -z "$proxy_auth_method" ] || echo "proxy_auth_method=$proxy_auth_method" >> /etc/dnf/dnf.conf ; } \
  && dnf -y install dnf-plugins-core \
  && dnf -y config-manager --set-enabled powertools
 
