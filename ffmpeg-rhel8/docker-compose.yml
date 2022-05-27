@@ -11,7 +11,7 @@ services:
         # Minimum driver version required by Video Codec SDK:
         # - 11.1.5.1: 470.57.02
         # - 11.0.10.1: 455.28
-        # - 10.0.26.3: 445.87
+        # - 10.0.26.2: 445.87
         # - 9.1.23.3: 435.21
         # - 9.0.18.5: 418.30
         NVCODEC_VERSION: "11.0.10.1"
