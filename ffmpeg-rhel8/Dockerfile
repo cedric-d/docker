@@ -170,12 +170,23 @@ RUN ln -s /bin/true /usr/local/sbin/depmod \
        /usr/local/sbin/modprobe \
        /usr/local/sbin/rmmod
 
-RUN if [ -n "$UNLEASH_NVIDIA_POWER" ]; then \
+ARG PATCH_NVIDIA_LIBS
+RUN if [ -n "$PATCH_NVIDIA_LIBS" ]; then \
         curl --output-dir /tmp --remote-name-all \
             https://github.com/keylase/nvidia-patch/raw/master/patch.sh \
             https://github.com/keylase/nvidia-patch/raw/master/patch-fbc.sh \
      && /bin/bash /tmp/patch.sh -d ${NVIDIA_DRIVER_VERSION} \
      && /bin/bash /tmp/patch-fbc.sh -d ${NVIDIA_DRIVER_VERSION} \
+    ; fi
+
+# embed required NVIDIA libraries in the output directory
+ARG EMBED_NVIDIA_LIBS
+RUN if [ -n "$EMBED_NVIDIA_LIBS" ]; then \
+        ln -t $PREFIX/lib64/ \
+          /usr/lib64/libcuda.so.* \
+          /usr/lib64/libnvcuvid.so.* \
+          /usr/lib64/libnvidia-encode.so.* \
+          /usr/lib64/libnvidia-fbc.so.* \
     ; fi
 
 COPY --from=devel $PREFIX/ $PREFIX/
