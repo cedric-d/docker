@@ -34,14 +34,7 @@ RUN dnf -y install \
 
 FROM base AS devel
 
-ARG FFMPEG_VERSION=5.0.1
-ARG GMMLIB_VERSION=22.1.3
-ARG INTELMEDIASDK_VERSION=22.3.0
-ARG LIBVA_VERSION=2.14.0
-
 ARG CUDA_RPM_VERSION
-ARG NVCODEC_VERSION
-ARG NVIDIA_DRIVER_VERSION
 
 RUN dnf -y config-manager --add-repo https://developer.download.nvidia.com/compute/cuda/repos/rhel8/x86_64/cuda-rhel8.repo \
  && dnf -y install https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.noarch.rpm \
@@ -77,6 +70,15 @@ ARG PREFIX
 ENV PATH=$PREFIX/bin:/usr/local/cuda/bin:$PATH
 ENV PKG_CONFIG_PATH=$PREFIX/lib64/pkgconfig
 
+
+ARG FFMPEG_VERSION=5.0.1
+ARG GMMLIB_VERSION=22.1.3
+ARG INTELMEDIASDK_VERSION=22.3.0
+ARG LIBVA_VERSION=2.14.0
+
+
+ARG NVCODEC_VERSION
+ARG NVIDIA_DRIVER_VERSION
 
 WORKDIR /build
 
