@@ -172,18 +172,18 @@ RUN ln -s /bin/true /usr/local/sbin/depmod \
 
 ARG PATCH_NVIDIA_LIBS
 RUN if [ -n "$PATCH_NVIDIA_LIBS" ]; then \
-        cd /tmp && curl --remote-name-all \
+        cd /tmp && curl --location --remote-name-all \
             https://github.com/keylase/nvidia-patch/raw/master/patch.sh \
             https://github.com/keylase/nvidia-patch/raw/master/patch-fbc.sh \
-     && /bin/bash /tmp/patch.sh -d ${NVIDIA_DRIVER_VERSION} \
-     && /bin/bash /tmp/patch-fbc.sh -d ${NVIDIA_DRIVER_VERSION} \
-     && rm /tmp/patch.sh /tmp/patch-fbc.sh \
+     && bash patch.sh -d ${NVIDIA_DRIVER_VERSION} \
+     && bash patch-fbc.sh -d ${NVIDIA_DRIVER_VERSION} \
+     && rm patch.sh patch-fbc.sh \
     ; fi
 
 # embed required NVIDIA libraries in the output directory
 ARG EMBED_NVIDIA_LIBS
 RUN if [ -n "$EMBED_NVIDIA_LIBS" ]; then \
-        ln -t $PREFIX/lib64/ \
+        ln -v -t $PREFIX/lib64/ \
           /usr/lib64/libcuda.so.* \
           /usr/lib64/libnvcuvid.so.* \
           /usr/lib64/libnvidia-encode.so.* \
