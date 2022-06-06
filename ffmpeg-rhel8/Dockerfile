@@ -81,6 +81,8 @@ RUN wget -N \
   https://github.com/FFmpeg/nv-codec-headers/releases/download/n${NVCODEC_VERSION}/nv-codec-headers-${NVCODEC_VERSION}.tar.gz \
   https://fr.download.nvidia.com/XFree86/Linux-x86_64/${NVIDIA_DRIVER_VERSION}/NVIDIA-Linux-x86_64-${NVIDIA_DRIVER_VERSION}.run
 
+COPY ffmpeg-nvfbc.patch ./
+
 
 ARG PREFIX
 ENV PATH=$PREFIX/bin:/usr/local/cuda/bin:$PATH
@@ -126,6 +128,7 @@ RUN tar xvf nv-codec-headers-${NVCODEC_VERSION}.tar.gz \
 ARG FFMPEG_EXTRA_CONFIGURE_OPTIONS
 RUN tar xvf ffmpeg-${FFMPEG_VERSION}.tar.xz \
  && cd ffmpeg-${FFMPEG_VERSION} \
+ && patch -p1 -i ../ffmpeg-nvfbc.patch \
  && ./configure --prefix=$PREFIX --libdir=$PREFIX/lib64 \
       --extra-cflags="-I/usr/local/cuda/include" --extra-ldflags="-L/usr/local/cuda/lib64" \
       --enable-cuda-nvcc \
@@ -138,6 +141,7 @@ RUN tar xvf ffmpeg-${FFMPEG_VERSION}.tar.xz \
       --enable-libxcb \
       --enable-nvdec \
       --enable-nvenc \
+      --enable-nvfbc \
       --enable-opengl \
       --enable-vaapi \
     --disable-static --enable-shared --enable-rpath --enable-lto --disable-doc \
