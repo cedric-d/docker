@@ -2994,7 +2994,7 @@ index 22323a0a44..a23e67b5f0 100644
  extern const AVInputFormat  ff_oss_demuxer;
 diff --git a/libavdevice/nvfbc.c b/libavdevice/nvfbc.c
 new file mode 100644
-index 0000000000..04fc361b65
+index 0000000000..a78f6ed434
 --- /dev/null
 +++ b/libavdevice/nvfbc.c
 @@ -0,0 +1,862 @@
@@ -3751,15 +3751,15 @@ index 0000000000..04fc361b65
 +    screen_w = XWidthOfScreen(screen);
 +    screen_h = XHeightOfScreen(screen);
 +
-+    // parse URL for definition of the capture box
-+    if (s->url && s->url[0]) {
-+        // complete definition: size and position
++    // parse URL for definition of the capture box (treat "-" as whole display)
++    if (s->url && s->url[0] && strcmp(s->url, "pipe:")) {
++        // first format: size and optional position
 +        count = sscanf(s->url, " %d x %d + %d + %d %c",
 +                       &ctx->w, &ctx->h, &ctx->x, &ctx->y, &trailer);
 +        if (count != 2 && count != 4) {
 +            ctx->w = ctx->h = 0;
 +
-+            // partial definition: position only
++            // second format: position only
 +            count = sscanf(s->url, " + %d + %d %c", &ctx->x, &ctx->y, &trailer);
 +            if (count != 2) {
 +                ctx->x = ctx->y = 0;
