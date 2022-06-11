@@ -2994,10 +2994,10 @@ index 22323a0a44..a23e67b5f0 100644
  extern const AVInputFormat  ff_oss_demuxer;
 diff --git a/libavdevice/nvfbc.c b/libavdevice/nvfbc.c
 new file mode 100644
-index 0000000000..b3190d8631
+index 0000000000..42a3eb80d7
 --- /dev/null
 +++ b/libavdevice/nvfbc.c
-@@ -0,0 +1,878 @@
+@@ -0,0 +1,884 @@
 +/*
 + * NVIDIA Framebuffer Capture grabber
 + * Copyright (C) 2022 Cedric Delmas
@@ -3194,8 +3194,14 @@ index 0000000000..b3190d8631
 +    for (;;) {
 +        curtime = av_gettime_relative();
 +        delay   = ctx->time_frame - curtime;
-+        if (delay <= 0)
++        if (delay <= 0) {
++            // correct any lost frames
++            if (delay <= -ctx->frame_duration) {
++                ctx->time_frame += (delay / -ctx->frame_duration) *
++                                       ctx->frame_duration;
++            }
 +            break;
++        }
 +        av_usleep(delay);
 +    }
 +
