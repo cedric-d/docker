@@ -2902,10 +2902,10 @@ index 0000000000..6e3bd67058
 +
 +#endif
 diff --git a/configure b/configure
-index 7a62f0c248..0170fab8c4 100755
+index 9d6457d81b..75d9aaa639 100755
 --- a/configure
 +++ b/configure
-@@ -343,6 +343,7 @@ External library support:
+@@ -345,6 +345,7 @@ External library support:
    --enable-mmal            enable Broadcom Multi-Media Abstraction Layer (Raspberry Pi) via MMAL [no]
    --disable-nvdec          disable Nvidia video decoding acceleration (via hwaccel) [autodetect]
    --disable-nvenc          disable Nvidia video encoding code [autodetect]
@@ -2913,7 +2913,7 @@ index 7a62f0c248..0170fab8c4 100755
    --enable-omx             enable OpenMAX IL code [no]
    --enable-omx-rpi         enable OpenMAX IL code for Raspberry Pi [no]
    --enable-rkmpp           enable Rockchip Media Process Platform code [no]
-@@ -1894,6 +1895,7 @@ HWACCEL_AUTODETECT_LIBRARY_LIST="
+@@ -1899,6 +1900,7 @@ HWACCEL_AUTODETECT_LIBRARY_LIST="
      ffnvcodec
      nvdec
      nvenc
@@ -2921,7 +2921,7 @@ index 7a62f0c248..0170fab8c4 100755
      vaapi
      vdpau
      videotoolbox
-@@ -3516,6 +3518,8 @@ kmsgrab_indev_deps="libdrm"
+@@ -3527,6 +3529,8 @@ kmsgrab_indev_deps="libdrm"
  lavfi_indev_deps="avfilter"
  libcdio_indev_deps="libcdio"
  libdc1394_indev_deps="libdc1394"
@@ -2930,7 +2930,7 @@ index 7a62f0c248..0170fab8c4 100755
  openal_indev_deps="openal"
  opengl_outdev_deps="opengl"
  opengl_outdev_suggest="sdl2"
-@@ -6942,7 +6946,7 @@ if enabled x86; then
+@@ -6960,7 +6964,7 @@ if enabled x86; then
          mingw32*|mingw64*|win32|win64|linux|cygwin*)
              ;;
          *)
@@ -2939,7 +2939,7 @@ index 7a62f0c248..0170fab8c4 100755
              ;;
      esac
  elif enabled_any aarch64 ppc64 && ! enabled bigendian; then
-@@ -6950,11 +6954,11 @@ elif enabled_any aarch64 ppc64 && ! enabled bigendian; then
+@@ -6968,11 +6972,11 @@ elif enabled_any aarch64 ppc64 && ! enabled bigendian; then
          linux)
              ;;
          *)
@@ -2953,7 +2953,7 @@ index 7a62f0c248..0170fab8c4 100755
  fi
  
  enabled ffnvcodec && enable cuda
-@@ -6971,6 +6975,14 @@ if enabled_any nvdec cuvid; then
+@@ -6989,6 +6993,14 @@ if enabled_any nvdec cuvid; then
      check_type "ffnvcodec/dynlink_cuda.h ffnvcodec/dynlink_cuviddec.h" "CUVIDAV1PICPARAMS"
  fi
  
@@ -2969,10 +2969,10 @@ index 7a62f0c248..0170fab8c4 100755
      check_cpp_condition amf "AMF/core/Version.h" \
          "(AMF_VERSION_MAJOR << 48 | AMF_VERSION_MINOR << 32 | AMF_VERSION_RELEASE << 16 | AMF_VERSION_BUILD_NUM) >= 0x0001000400090000"
 diff --git a/libavdevice/Makefile b/libavdevice/Makefile
-index 53efda0514..70ead4456b 100644
+index bbe2f69dcc..db03787423 100644
 --- a/libavdevice/Makefile
 +++ b/libavdevice/Makefile
-@@ -32,6 +32,7 @@ OBJS-$(CONFIG_IEC61883_INDEV)            += iec61883.o
+@@ -34,6 +34,7 @@ OBJS-$(CONFIG_IEC61883_INDEV)            += iec61883.o
  OBJS-$(CONFIG_JACK_INDEV)                += jack.o timefilter.o
  OBJS-$(CONFIG_KMSGRAB_INDEV)             += kmsgrab.o
  OBJS-$(CONFIG_LAVFI_INDEV)               += lavfi.o
